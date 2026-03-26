@@ -10,6 +10,12 @@ import {
   ApplicationDetailPage,
   ManualPage,
 } from './pages'
+import {
+  DepartmentsPage,
+  UsersPage,
+  MeetingTypesPage,
+  ApplicationTypesPage,
+} from './pages/master'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { isAuthenticated } = useAuthStore()
@@ -37,6 +43,10 @@ export default function App() {
           <Route path="applications" element={<ApplicationsPage />} />
           <Route path="applications/:id" element={<ApplicationDetailPage />} />
           <Route path="manual" element={<ManualPage />} />
+          <Route path="master/departments" element={<DepartmentsPage />} />
+          <Route path="master/users" element={<UsersPage />} />
+          <Route path="master/meeting-types" element={<MeetingTypesPage />} />
+          <Route path="master/application-types" element={<ApplicationTypesPage />} />
         </Route>
         <Route path="*" element={<Navigate to="/customers" replace />} />
       </Routes>

@@ -4,14 +4,21 @@ import { useAuthStore } from '../stores/authStore'
 import { useMasterDataStore } from '../stores/masterDataStore'
 
 const navItems = [
-  { path: '/customers', icon: 'fas fa-building', label: '顧客一覧' },
-  { path: '/meetings', icon: 'fas fa-calendar-check', label: '商談管理' },
-  { path: '/applications', icon: 'fas fa-file-signature', label: '申請管理' },
-  { path: '/manual', icon: 'fas fa-book', label: '操作マニュアル' },
+  { path: '/customers', icon: 'fa-solid fa-users', label: '顧客一覧' },
+  { path: '/applications', icon: 'fa-solid fa-file-alt', label: '申請一覧' },
+  { path: '/meetings', icon: 'fa-solid fa-list-alt', label: '商談登録・履歴' },
+]
+
+const masterDataItems = [
+  { path: '/master/departments', label: '部署' },
+  { path: '/master/users', label: 'ユーザー' },
+  { path: '/master/meeting-types', label: '商談種別' },
+  { path: '/master/application-types', label: '申請種別' },
 ]
 
 export default function Layout() {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [isMasterExpanded, setIsMasterExpanded] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
   const { user, logout } = useAuthStore()
@@ -20,6 +27,12 @@ export default function Layout() {
   useEffect(() => {
     fetchAllMasterData()
   }, [fetchAllMasterData])
+
+  useEffect(() => {
+    if (location.pathname.startsWith('/master')) {
+      setIsMasterExpanded(true)
+    }
+  }, [location.pathname])
 
   const handleLogout = () => {
     logout()
@@ -41,25 +54,79 @@ export default function Layout() {
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
             className="p-2 hover:bg-gray-100 rounded text-primary-900"
           >
-            <i className={`fas ${isSidebarCollapsed ? 'fa-angle-right' : 'fa-angle-left'}`}></i>
+            <i className={`fas ${isSidebarCollapsed ? 'fa-bars' : 'fa-bars'}`}></i>
           </button>
         </div>
 
-        <nav className="flex-1 mt-5">
+        <nav className="flex-1 mt-5 overflow-y-auto">
           {navItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
-              className={`flex items-center py-4 px-5 text-gray-700 font-medium border-l-[3px] border-transparent transition-all hover:bg-gray-100 ${
+              className={`flex items-center py-3 px-5 text-gray-700 font-medium transition-all hover:bg-gray-50 ${
                 location.pathname.startsWith(item.path)
-                  ? 'bg-primary-50 text-primary-900 border-l-primary-900'
+                  ? 'bg-blue-50 text-blue-700'
                   : ''
               } ${isSidebarCollapsed ? 'justify-center' : ''}`}
             >
-              <i className={`${item.icon} w-5 text-center ${isSidebarCollapsed ? 'mr-0' : 'mr-4'}`}></i>
+              <i className={`${item.icon} w-5 text-center ${isSidebarCollapsed ? 'mr-0' : 'mr-3'}`}></i>
               {!isSidebarCollapsed && <span>{item.label}</span>}
             </Link>
           ))}
+
+          {!isSidebarCollapsed && (
+            <div>
+              <button
+                onClick={() => setIsMasterExpanded(!isMasterExpanded)}
+                className={`w-full flex items-center justify-between py-3 px-5 text-gray-700 font-medium transition-all hover:bg-gray-50 ${
+                  location.pathname.startsWith('/master') ? 'bg-blue-50 text-blue-700' : ''
+                }`}
+              >
+                <span className="flex items-center">
+                  <i className="fa-solid fa-database w-5 text-center mr-3"></i>
+                  <span>マスタ・データ管理</span>
+                </span>
+                <i className={`fas ${isMasterExpanded ? 'fa-chevron-down' : 'fa-chevron-right'} text-xs`}></i>
+              </button>
+              {isMasterExpanded && (
+                <div className="bg-gray-50">
+                  {masterDataItems.map((item) => (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={`flex items-center py-2.5 pl-12 pr-5 text-sm text-gray-600 transition-all hover:bg-gray-100 ${
+                        location.pathname === item.path ? 'text-blue-700 font-medium' : ''
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {isSidebarCollapsed && (
+            <Link
+              to="/master/departments"
+              className={`flex items-center justify-center py-3 px-5 text-gray-700 font-medium transition-all hover:bg-gray-50 ${
+                location.pathname.startsWith('/master') ? 'bg-blue-50 text-blue-700' : ''
+              }`}
+              title="マスタ・データ管理"
+            >
+              <i className="fa-solid fa-database w-5 text-center"></i>
+            </Link>
+          )}
+
+          <Link
+            to="/manual"
+            className={`flex items-center py-3 px-5 text-gray-700 font-medium transition-all hover:bg-gray-50 ${
+              location.pathname === '/manual' ? 'bg-blue-50 text-blue-700' : ''
+            } ${isSidebarCollapsed ? 'justify-center' : ''}`}
+          >
+            <i className={`fa-solid fa-book w-5 text-center ${isSidebarCollapsed ? 'mr-0' : 'mr-3'}`}></i>
+            {!isSidebarCollapsed && <span>操作マニュアル</span>}
+          </Link>
         </nav>
 
         <div className="p-5 border-t border-gray-200">
@@ -89,12 +156,6 @@ export default function Layout() {
       </aside>
 
       <main className="flex-1 flex flex-col h-screen overflow-y-auto min-w-0">
-        <header className="bg-white border-b border-gray-200 px-6 py-3 flex justify-end items-center min-h-[57px]">
-          <div className="flex items-center gap-4 text-sm">
-            <span className="text-gray-600">{user?.name}</span>
-            <span className="bg-gray-100 px-3 py-1.5 rounded">{user?.role || '一般'}</span>
-          </div>
-        </header>
         <div className="flex-1 overflow-y-auto">
           <Outlet />
         </div>
