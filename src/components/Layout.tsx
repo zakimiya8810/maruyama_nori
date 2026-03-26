@@ -4,7 +4,6 @@ import { useAuthStore } from '../stores/authStore'
 import { useMasterDataStore } from '../stores/masterDataStore'
 
 const navItems = [
-  { path: '/dashboard', icon: 'fas fa-chart-line', label: 'ダッシュボード' },
   { path: '/customers', icon: 'fas fa-building', label: '顧客一覧' },
   { path: '/meetings', icon: 'fas fa-calendar-check', label: '商談管理' },
   { path: '/applications', icon: 'fas fa-file-signature', label: '申請管理' },

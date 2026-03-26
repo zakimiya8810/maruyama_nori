@@ -3,7 +3,6 @@ import { useAuthStore } from './stores/authStore'
 import Layout from './components/Layout'
 import {
   LoginPage,
-  DashboardPage,
   CustomersPage,
   CustomerDetailPage,
   MeetingsPage,
@@ -30,8 +29,7 @@ export default function App() {
             </PrivateRoute>
           }
         >
-          <Route index element={<Navigate to="/dashboard" replace />} />
-          <Route path="dashboard" element={<DashboardPage />} />
+          <Route index element={<Navigate to="/customers" replace />} />
           <Route path="customers" element={<CustomersPage />} />
           <Route path="customers/:id" element={<CustomerDetailPage />} />
           <Route path="meetings" element={<MeetingsPage />} />
@@ -40,7 +38,7 @@ export default function App() {
           <Route path="applications/:id" element={<ApplicationDetailPage />} />
           <Route path="manual" element={<ManualPage />} />
         </Route>
-        <Route path="*" element={<Navigate to="/dashboard" replace />} />
+        <Route path="*" element={<Navigate to="/customers" replace />} />
       </Routes>
     </BrowserRouter>
   )
