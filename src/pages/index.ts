@@ -1,0 +1,8 @@
+export { default as LoginPage } from './LoginPage'
+export { default as DashboardPage } from './DashboardPage'
+export { default as CustomersPage } from './CustomersPage'
+export { default as CustomerDetailPage } from './CustomerDetailPage'
+export { default as MeetingsPage } from './MeetingsPage'
+export { default as ApplicationsPage } from './ApplicationsPage'
+export { default as ApplicationDetailPage } from './ApplicationDetailPage'
+export { default as ManualPage } from './ManualPage'
